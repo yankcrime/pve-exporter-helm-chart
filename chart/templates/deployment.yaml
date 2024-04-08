@@ -49,7 +49,11 @@ spec:
       volumes:
       - name: pve-config
         secret:
+          {{- if .Values.existingSecretName }}
+          secretName: {{ .Values.existingSecretName }}
+          {{- else }}
           secretName: {{ template "prometheus-pve-exporter.fullname" . }}
+          {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}

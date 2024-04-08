@@ -1,12 +1,4 @@
-{{ template "chart.header" . }}
-
-## TL;DR;
-
-```console
-helm repo add stenic https://charts.stenic.io
-helm install my-release stenic/{{ template "chart.name" . }}
-```
-
+# prometheus-pve-exporter
 
 ## Introduction
 
@@ -14,11 +6,9 @@ A Prometheus exporter for [Proxmox Virtual Environment](https://proxmox.com/en/p
 
 This chart bootstraps a [PVE Exporter](https://github.com/gesellix/pve-prometheus-exporter) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-
 ## Prerequisites
 
 - Kubernetes 1.8+ with Beta APIs enabled
-
 
 ## Installing the Chart
 
@@ -26,13 +16,12 @@ To install the chart with the release name `my-release`:
 
 ```console
 helm repo add stenic https://charts.stenic.io
-helm install my-release stenic/{{ template "chart.name" . }}
+helm install my-release stenic/prometheus-pve-exporter
 ```
 
-These commands deploy {{ template "chart.name" . }} on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+These commands deploy prometheus-pve-exporter on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tip**: List all releases using `helm list`
-
 
 ## Uninstalling the Chart
 
@@ -43,7 +32,6 @@ helm delete my-release
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
-
 
 ## Configuration
 
@@ -68,14 +56,38 @@ scrape_configs:
         replacement: prometheus-pve-exporter:9221  # PVE exporter service.
 ```
 
-The following tables list the configurable parameters of the {{ template "chart.name" . }} chart and their default values.
+The following tables list the configurable parameters of the prometheus-pve-exporter chart and their default values.
 
-{{ template "chart.valuesTable" . }}
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.repository | string | `"prompve/prometheus-pve-exporter"` |  |
+| image.tag | string | `""` |  |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.hosts | string | `nil` |  |
+| ingress.path | string | `"/"` |  |
+| ingress.tls | list | `[]` |  |
+| nodeSelector | object | `{}` |  |
+| pve.password | string | `"sEcr3T"` |  |
+| pve.target | string | `nil` |  |
+| pve.user | string | `"prometheus@pve"` |  |
+| pve.verify_ssl | bool | `true` |  |
+| rbac.create | bool | `true` |  |
+| rbac.pspEnabled | bool | `true` |  |
+| replicaCount | int | `1` |  |
+| resources | object | `{}` |  |
+| service.port | int | `9221` |  |
+| service.type | string | `"ClusterIP"` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `nil` |  |
+| tolerations | list | `[]` |  |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-helm install my-release -f values.yaml stenic/{{ template "chart.name" . }}
+helm install my-release -f values.yaml stenic/prometheus-pve-exporter
 ```

@@ -1,14 +1,6 @@
-# Helm charts
+# Helm chart for PVE Exporter
 
-Applications, provided by [Stenic](https://stenic.io), ready to launch on Kubernetes using [Kubernetes Helm](https://github.com/helm/helm).
-
-## TL;DR
-
-```
-$ helm repo add stenic https://charts.stenic.io
-$ helm search repo stenic
-$ helm install my-release stenic/<chart>
-```
+Based off of the chart provided by [Stenic](https://stenic.io).
 
 ## License
 

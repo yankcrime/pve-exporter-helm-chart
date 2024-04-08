@@ -1,25 +1,15 @@
 {{ template "chart.header" . }}
 
-## TL;DR;
-
-```console
-helm repo add stenic https://charts.stenic.io
-helm install my-release --set "service.type=LoadBalancer" stenic/{{ template "chart.name" . }}
-```
-
 ## Introduction
 
-This chart installs `{{ template "chart.name" . }}` on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+A Prometheus exporter for [Proxmox Virtual Environment](https://proxmox.com/en/proxmox-ve) metrics.
 
-[![openvpn-as](https://raw.githubusercontent.com/stenic/helm-charts/master/img/openvpn-as.png)](https://openvpn.net/index.php/access-server/overview.html)
+This chart bootstraps a [PVE Exporter](https://github.com/gesellix/pve-prometheus-exporter) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 
 ## Prerequisites
 
-- Kubernetes 1.12+
-- Helm 3.0+
-- LoadBalancer to expose the vpn service
-- PV provisioner support in the underlying infrastructure
+- Kubernetes 1.8+ with Beta APIs enabled
 
 
 ## Installing the Chart
@@ -28,7 +18,7 @@ To install the chart with the release name `my-release`:
 
 ```console
 helm repo add stenic https://charts.stenic.io
-helm install my-release --set "service.type=LoadBalancer" stenic/{{ template "chart.name" . }}
+helm install my-release stenic/{{ template "chart.name" . }}
 ```
 
 These commands deploy {{ template "chart.name" . }} on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
@@ -48,6 +38,27 @@ The command removes all the Kubernetes components associated with the chart and 
 
 
 ## Configuration
+
+Add the following to your prometheus configuration:
+
+```yaml
+scrape_configs:
+  - job_name: 'pve'
+    static_configs:
+      - targets:
+        - 192.168.1.2  # Proxmox VE node.
+        - 192.168.1.3  # Proxmox VE node.
+    metrics_path: /pve
+    params:
+      module: [default]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: prometheus-pve-exporter:9221  # PVE exporter service.
+```
 
 The following tables list the configurable parameters of the {{ template "chart.name" . }} chart and their default values.
 
